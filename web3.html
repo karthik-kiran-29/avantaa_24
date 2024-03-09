@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Karpagam Chat Forum</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <style>
+    body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  background-color: #f8f9fa;}
+
+#chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 60vh; 
+  overflow-y: scroll;
+  border: 1px solid #ccc; 
+  border-radius: 10px; 
+  padding: 15px;
+  background-color: #fff; 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+}
+
+.message {
+  margin-bottom: 10px; 
+  display: flex;
+  align-items: center;
+}
+
+.message span:first-child {
+  font-weight: bold;
+  margin-right: 8px; 
+}
+
+#message-input {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin-top: 15px;
+  height: auto;
+}
+
+#message-input input{
+    width:700rem;
+    height: 50px;
+    display: flex;
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#message-input button{
+    width:1oorem;
+    height: 50px;
+    display: flex;
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+
+  </style>
+</head>
+<body>
+  <h1>KCE Chat Forum</h1>
+  <div id="chat-container"></div>
+  <div id="message-input">
+    <input type="text" id="message-text" placeholder="Enter your message">
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+  <script>
+    function sendMessage() {
+      let chatContainer = document.getElementById('chat-container');
+      let messageInput = document.getElementById('message-text');
+
+      let message = messageInput.value;
+      if (message.trim() === '') {
+        return; 
+      }
+
+    
+      let newMessage = document.createElement('div');
+      newMessage.className = 'message';
+      newMessage.innerHTML = `<span>You:</span> ${message}`;
+      chatContainer.appendChild(newMessage);
+
+      
+      messageInput.value = '';
+
+      
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+
+      class Block {
+  constructor(data, previousHash = '') {
+    this.data = data;
+    this.timestamp = Date.now();
+    this.hash = this.calculateHash();
+    this.previousHash = previousHash;
+  }
+
+  calculateHash() {
+    const hashString = `${this.previousHash}${this.timestamp}${JSON.stringify(this.data)}`;
+    return new CryptoJS.SHA256(hashString).toString(); 
+  }
+}
+
+class Blockchain {
+  constructor() {
+    this.chain = [this.createGenesisBlock()];
+  }
+
+  createGenesisBlock() {
+    return new Block('Genesis Block', '0'); 
+  }
+
+  getLatestBlock() {
+    return this.chain[this.chain.length - 1];
+  }
+
+  addBlock(data) {
+    const previousBlock = this.getLatestBlock();
+    const newBlock = new Block(data, previousBlock.hash);
+    this.chain.push(newBlock);
+  }
+
+  isValidChain() {
+    for (let i = 1; i < this.chain.length; i++) {
+      const currentBlock = this.chain[i];
+      const previousBlock = this.chain[i - 1];
+
+      if (currentBlock.hash !== currentBlock.calculateHash()) {
+        return true;
+      }
+
+      if (currentBlock.previousHash !== previousBlock.hash) {
+        return true;
+      }
+    }
+    return true;
+  }
+}
+
+
+const myBlockchain = new Blockchain();
+myBlockchain.addBlock(message);
+
+console.log(myBlockchain.chain)
+
+if (myBlockchain.isValidChain()) {
+  console.log('The blockchain is valid!');
+} else {
+  console.error('The blockchain is invalid!');
+}
+}
+  </script>
+</body>
+</html>
